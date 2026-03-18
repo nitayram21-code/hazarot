@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>HAZAROT</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <header>
+    <span class="logo" onclick="goHome()">HAZAROT</span>
+    <button class="theme-toggle" id="theme-btn" onclick="toggleTheme()" aria-label="החלף מצב">
+      <span class="theme-toggle-thumb"></span>
+    </button>
+    <button class="profile-btn" id="profile-btn" onclick="openProfile()" style="display:none">הרשמה</button>
+  </header>
+
+  <!-- Profile Modal -->
+  <div class="profile-overlay hidden" id="profile-overlay">
+    <div class="profile-modal">
+      <div class="profile-modal-head">
+        <h2>הפרופיל שלי</h2>
+        <button class="profile-close" onclick="closeProfile()">×</button>
+      </div>
+      <div class="field-group">
+        <label class="field-label">שם פרטי</label>
+        <input type="text" id="p-first" placeholder="ישראל" autocomplete="given-name" />
+      </div>
+      <div class="field-group">
+        <label class="field-label">שם משפחה</label>
+        <input type="text" id="p-last" placeholder="ישראלי" autocomplete="family-name" />
+      </div>
+      <div class="field-group">
+        <label class="field-label">שם ההרכב</label>
+        <input type="text" id="p-band" placeholder="שם הלהקה / האומן" autocomplete="off" />
+      </div>
+      <div class="field-group" style="margin-bottom:0">
+        <label class="field-label">אימייל</label>
+        <input type="email" id="p-email" placeholder="your@email.com" dir="ltr" style="text-align:left" autocomplete="email" />
+      </div>
+      <button class="next-btn" style="width:100%;margin-top:1.25rem" onclick="saveProfileForm()">שמור פרופיל</button>
+    </div>
+  </div>
+
+  <main>
+
+    <!-- Landing -->
+    <section class="step active" id="step-home">
+      <div id="landing-content"></div>
+    </section>
+
+    <!-- Step 1: Band Name -->
+    <section class="step" id="step-1">
+      <p class="step-label">01</p>
+      <h1>שם ההרכב</h1>
+      <p class="sub">הזינו את שם הלהקה או שם האומן כפי שתרצו שיופיע</p>
+      <input type="text" id="band-name" placeholder="שם הלהקה / האומן" autocomplete="off" />
+      <button class="next-btn" onclick="goToStep2()">המשך</button>
+    </section>
+
+    <!-- Step 2: Members & Instruments -->
+    <section class="step" id="step-2">
+      <p class="step-label">02</p>
+      <h1>כמה נגנים ואיזה כלים?</h1>
+      <p class="sub">כדי שהחדר יהיה מוכן מראש — ספרו לנו מי מגיע</p>
+
+      <div class="members-row">
+        <label>מספר נגנים</label>
+        <div class="counter">
+          <button onclick="changeCount(-1)">−</button>
+          <span id="member-count">1</span>
+          <button onclick="changeCount(1)">+</button>
+        </div>
+      </div>
+
+      <div class="instruments-section">
+        <label>כלים שמגיעים</label>
+        <div class="instrument-list" id="instrument-list"></div>
+        <div class="instrument-add-row">
+          <input type="text" id="instrument-input" placeholder="הוסיפו כלי..." autocomplete="off" />
+          <button class="add-btn" onclick="addInstrument()">+</button>
+        </div>
+      </div>
+
+      <div class="nav-row">
+        <button class="back-btn" onclick="goToStep(1)">חזרה</button>
+        <button class="next-btn" onclick="goToStep3()">המשך</button>
+      </div>
+    </section>
+
+    <!-- Step 3: Special Requests -->
+    <section class="step" id="step-3">
+      <p class="step-label">03</p>
+      <h1>בקשות מיוחדות</h1>
+      <p class="sub">ציוד נוסף, הגברה, מיקרופונים, שקטניות — כל מה שנדרש</p>
+      <textarea id="special-requests" placeholder="לדוגמה: צריכים מיקרופון נוסף, מסך לחיבור מחשב, שקטנייה לתופים..." rows="5"></textarea>
+
+      <div class="nav-row">
+        <button class="back-btn" onclick="goToStep(2)">חזרה</button>
+        <button class="next-btn" onclick="goToStep4()">המשך</button>
+      </div>
+    </section>
+
+    <!-- Step 4: Date, Time & Location -->
+    <section class="step" id="step-4">
+      <p class="step-label">04</p>
+      <h1>מתי ואיפה?</h1>
+      <p class="sub">בחרו תאריך ושעות, ואז חפשו לפי אזור או שם חדר</p>
+
+      <div class="field-group">
+        <label class="field-label">תאריך</label>
+        <input type="date" id="rehearsal-date" />
+      </div>
+
+      <div class="time-row">
+        <div class="field-group">
+          <label class="field-label">משעה</label>
+          <input type="time" id="start-time" step="1800" />
+        </div>
+        <div class="field-group">
+          <label class="field-label">עד שעה</label>
+          <input type="time" id="end-time" step="1800" />
+        </div>
+      </div>
+
+      <div class="field-group">
+        <label class="field-label">אזור</label>
+        <select id="location-select">
+          <option value="">בחרו עיר / אזור</option>
+          <option value="tel-aviv">תל אביב</option>
+          <option value="jerusalem">ירושלים</option>
+          <option value="haifa">חיפה</option>
+          <option value="ramat-gan">רמת גן / גבעתיים</option>
+          <option value="beersheba">באר שבע</option>
+        </select>
+      </div>
+
+      <div class="search-or"><span>או</span></div>
+
+      <div class="field-group">
+        <label class="field-label">שם חדר חזרות</label>
+        <input type="text" id="room-name-search" placeholder="לדוגמה: סטודיו TLV, כרמל ביט..." autocomplete="off" />
+      </div>
+
+      <div class="nav-row">
+        <button class="back-btn" onclick="goToStep(3)">חזרה</button>
+        <button class="next-btn" onclick="searchRooms()">חפשו חדרים</button>
+      </div>
+    </section>
+
+    <!-- Step 5: Results -->
+    <section class="step" id="step-5">
+      <p class="step-label">05</p>
+      <h1>חדרים פנויים</h1>
+      <p class="sub" id="results-sub"></p>
+      <div class="sort-row">
+        <span class="sort-label">מיון:</span>
+        <button class="sort-btn" id="sort-name" onclick="setSort('name')">א-ת</button>
+        <button class="sort-btn" id="sort-price" onclick="setSort('price')">מחיר</button>
+      </div>
+      <div class="rooms-list" id="rooms-list"></div>
+      <div class="nav-row" style="margin-top: 1rem;">
+        <button class="back-btn" onclick="goToStep(4)">שנו חיפוש</button>
+      </div>
+    </section>
+
+    <!-- Confirmation -->
+    <section class="step" id="step-confirm">
+      <div class="confirm-icon">✓</div>
+      <h1>הבקשה נשלחה!</h1>
+      <div class="summary" id="summary"></div>
+      <button class="next-btn" onclick="resetForm()" style="margin-top: 2rem;">קביעה חדשה</button>
+    </section>
+
+  </main>
+
+  <!-- Progress dots -->
+  <div class="progress">
+    <div class="dot active" id="dot-1"></div>
+    <div class="dot" id="dot-2"></div>
+    <div class="dot" id="dot-3"></div>
+    <div class="dot" id="dot-4"></div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
