@@ -776,7 +776,7 @@ html[data-theme="light"] select option { background: #fff; color: #1d1d1f; }
 
 .landing-cta {
   position: absolute;
-  top: 55%;
+  top: 50%;
   transform: translateY(-50%);
   left: 0;
   right: 0;
