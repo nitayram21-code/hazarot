@@ -393,7 +393,7 @@ textarea {
   border: 1px solid var(--c-input-border);
   border-radius: var(--radius);
   padding: 0.88rem 1rem;
-  font-size: 0.93rem;
+  font-size: 1rem;
   font-family: inherit;
   color: var(--c-text);
   outline: none;
@@ -653,6 +653,12 @@ textarea::placeholder {
   gap: 0.75rem;
 }
 
+@media (max-width: 380px) {
+  .time-row {
+    grid-template-columns: 1fr;
+  }
+}
+
 input[type="date"],
 input[type="time"] {
   width: 100%;
@@ -662,7 +668,7 @@ input[type="time"] {
   border: 1px solid var(--c-input-border);
   border-radius: var(--radius);
   padding: 0.88rem 1rem;
-  font-size: 0.93rem;
+  font-size: 1rem;
   font-family: inherit;
   color: var(--c-text);
   outline: none;
@@ -671,6 +677,9 @@ input[type="time"] {
   text-align: left;
   color-scheme: dark;
   box-shadow: inset 0 1px 0 var(--c-shine);
+  -webkit-appearance: none;
+  appearance: none;
+  min-height: 48px;
 }
 
 html[data-theme="light"] input[type="date"],
@@ -693,7 +702,7 @@ select {
   border-radius: var(--radius);
   padding: 0.88rem 1rem;
   padding-left: 2.5rem;
-  font-size: 0.93rem;
+  font-size: 1rem;
   font-family: inherit;
   color: var(--c-text);
   outline: none;
