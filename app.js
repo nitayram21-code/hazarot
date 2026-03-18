@@ -78,26 +78,34 @@ function renderLanding() {
     `).join('');
 
     content.innerHTML = `
-      <p class="step-label">שלום,</p>
-      <h1>${activeProfile.firstName}</h1>
-      <p class="sub">בחרו הרכב או הוסיפו חדש</p>
-      <div class="profile-cards">
-        ${cardsHtml}
-        <div class="profile-card profile-card-add" onclick="openProfile('add')">
-          <div class="profile-card-add-icon">+</div>
-          <div class="profile-card-band">הוסף הרכב</div>
+      <div class="landing-top">
+        <p class="step-label">שלום,</p>
+        <h1>${activeProfile.firstName}</h1>
+        <p class="sub">בחרו הרכב או הוסיפו חדש</p>
+        <div class="profile-cards">
+          ${cardsHtml}
+          <div class="profile-card profile-card-add" onclick="openProfile('add')">
+            <div class="profile-card-add-icon">+</div>
+            <div class="profile-card-band">הוסף הרכב</div>
+          </div>
         </div>
       </div>
-      <button class="next-btn landing-main-btn" onclick="continueAsExisting()">המשך לחיפוש חדר</button>
-      <button class="landing-guest-btn" onclick="continueAsGuest()">כניסה כאורח</button>
+      <div class="landing-cta">
+        <button class="next-btn landing-main-btn" onclick="continueAsExisting()">המשך לחיפוש חדר</button>
+        <button class="landing-guest-btn" onclick="continueAsGuest()">כניסה כאורח</button>
+      </div>
     `;
   } else {
     content.innerHTML = `
-      <p class="step-label">ברוכים הבאים</p>
-      <h1>HAZAROT</h1>
-      <p class="sub">קבעו חזרות בקליק</p>
-      <button class="next-btn landing-main-btn" onclick="continueAsGuest()">כניסה כאורח</button>
-      <button class="landing-guest-btn" onclick="openProfile('add')">הרשמה לחיסכון בזמן ←</button>
+      <div class="landing-top">
+        <p class="step-label">ברוכים הבאים</p>
+        <h1>HAZAROT</h1>
+        <p class="sub">קבעו חזרות בקליק</p>
+      </div>
+      <div class="landing-cta">
+        <button class="next-btn landing-main-btn" onclick="continueAsGuest()">כניסה כאורח</button>
+        <button class="landing-guest-btn" onclick="openProfile('add')">הרשמה לחיסכון בזמן ←</button>
+      </div>
     `;
   }
 }
