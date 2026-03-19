@@ -272,23 +272,32 @@ const state = {
 
 const roomsDB = {
   'tel-aviv': [
-    { id: 1, name: 'סטודיו TLV', address: 'רחוב דיזנגוף 150, תל אביב', size: '40 מ"ר', capacity: 8, equipment: ['תופים', 'מגברים', 'PA'], pricePerHour: 120 },
-    { id: 2, name: 'הרוק שוק', address: 'רחוב הרצל 22, תל אביב', size: '30 מ"ר', capacity: 6, equipment: ['תופים', 'מגברים'], pricePerHour: 80 },
-    { id: 3, name: 'סאונד בייס', address: 'שדרות בן גוריון 5, תל אביב', size: '55 מ"ר', capacity: 12, equipment: ['תופים', 'מגברים', 'PA', 'מיקרופונים'], pricePerHour: 160 }
+    { id: 1, name: 'סטודיו TLV', address: 'רחוב דיזנגוף 150, תל אביב', size: '40 מ"ר', capacity: 8, equipment: ['תופים', 'מגברים', 'PA'], pricePerHour: 120,
+      slots: [{start:'09:00',end:'11:00'},{start:'11:00',end:'13:00'},{start:'15:00',end:'17:00'},{start:'19:00',end:'21:00'}] },
+    { id: 2, name: 'הרוק שוק', address: 'רחוב הרצל 22, תל אביב', size: '30 מ"ר', capacity: 6, equipment: ['תופים', 'מגברים'], pricePerHour: 80,
+      slots: [{start:'10:00',end:'12:00'},{start:'14:00',end:'16:00'},{start:'18:00',end:'20:00'},{start:'20:00',end:'22:00'}] },
+    { id: 3, name: 'סאונד בייס', address: 'שדרות בן גוריון 5, תל אביב', size: '55 מ"ר', capacity: 12, equipment: ['תופים', 'מגברים', 'PA', 'מיקרופונים'], pricePerHour: 160,
+      slots: [{start:'08:00',end:'10:00'},{start:'12:00',end:'14:00'},{start:'16:00',end:'18:00'},{start:'20:00',end:'22:00'}] }
   ],
   'jerusalem': [
-    { id: 4, name: 'ירושלים סטודיו', address: 'רחוב יפו 90, ירושלים', size: '35 מ"ר', capacity: 7, equipment: ['תופים', 'מגברים', 'PA'], pricePerHour: 100 },
-    { id: 5, name: 'מוזיקה בירה', address: 'רחוב המלך ג׳ורג׳ 44, ירושלים', size: '28 מ"ר', capacity: 5, equipment: ['תופים', 'מגברים'], pricePerHour: 70 }
+    { id: 4, name: 'ירושלים סטודיו', address: 'רחוב יפו 90, ירושלים', size: '35 מ"ר', capacity: 7, equipment: ['תופים', 'מגברים', 'PA'], pricePerHour: 100,
+      slots: [{start:'09:00',end:'11:00'},{start:'13:00',end:'15:00'},{start:'17:00',end:'19:00'}] },
+    { id: 5, name: 'מוזיקה בירה', address: 'רחוב המלך ג׳ורג׳ 44, ירושלים', size: '28 מ"ר', capacity: 5, equipment: ['תופים', 'מגברים'], pricePerHour: 70,
+      slots: [{start:'10:00',end:'12:00'},{start:'14:00',end:'16:00'},{start:'18:00',end:'20:00'}] }
   ],
   'haifa': [
-    { id: 6, name: 'כרמל ביט', address: 'רחוב הנשיא 12, חיפה', size: '45 מ"ר', capacity: 10, equipment: ['תופים', 'מגברים', 'PA', 'מיקרופונים'], pricePerHour: 110 },
-    { id: 7, name: 'פורט רוק', address: 'רחוב פלי"ם 3, חיפה', size: '32 מ"ר', capacity: 6, equipment: ['תופים', 'מגברים'], pricePerHour: 75 }
+    { id: 6, name: 'כרמל ביט', address: 'רחוב הנשיא 12, חיפה', size: '45 מ"ר', capacity: 10, equipment: ['תופים', 'מגברים', 'PA', 'מיקרופונים'], pricePerHour: 110,
+      slots: [{start:'09:00',end:'11:00'},{start:'11:00',end:'13:00'},{start:'15:00',end:'17:00'},{start:'19:00',end:'21:00'}] },
+    { id: 7, name: 'פורט רוק', address: 'רחוב פלי"ם 3, חיפה', size: '32 מ"ר', capacity: 6, equipment: ['תופים', 'מגברים'], pricePerHour: 75,
+      slots: [{start:'10:00',end:'12:00'},{start:'14:00',end:'16:00'},{start:'20:00',end:'22:00'}] }
   ],
   'ramat-gan': [
-    { id: 8, name: 'גבעתיים גרוב', address: 'רחוב קרליבך 8, גבעתיים', size: '38 מ"ר', capacity: 8, equipment: ['תופים', 'מגברים', 'PA'], pricePerHour: 95 }
+    { id: 8, name: 'גבעתיים גרוב', address: 'רחוב קרליבך 8, גבעתיים', size: '38 מ"ר', capacity: 8, equipment: ['תופים', 'מגברים', 'PA'], pricePerHour: 95,
+      slots: [{start:'09:00',end:'11:00'},{start:'13:00',end:'15:00'},{start:'17:00',end:'19:00'},{start:'19:00',end:'21:00'}] }
   ],
   'beersheba': [
-    { id: 9, name: 'דסרט סאונד', address: 'רחוב הנגב 25, באר שבע', size: '50 מ"ר', capacity: 10, equipment: ['תופים', 'מגברים', 'PA', 'מיקרופונים'], pricePerHour: 90 }
+    { id: 9, name: 'דסרט סאונד', address: 'רחוב הנגב 25, באר שבע', size: '50 מ"ר', capacity: 10, equipment: ['תופים', 'מגברים', 'PA', 'מיקרופונים'], pricePerHour: 90,
+      slots: [{start:'08:00',end:'10:00'},{start:'10:00',end:'12:00'},{start:'14:00',end:'16:00'},{start:'18:00',end:'20:00'}] }
   ]
 };
 
@@ -347,6 +356,52 @@ function goToStep4() {
   const today = new Date().toISOString().split('T')[0];
   document.getElementById('rehearsal-date').min = today;
   goToStep(4);
+}
+
+// ===== Room Name Autocomplete & Slots =====
+
+let selectedSlot = null; // { start, end }
+
+function onRoomNameInput() {
+  const q = document.getElementById('room-name-search').value.trim().toLowerCase();
+  const allRooms = Object.values(roomsDB).flat();
+  const match = q.length >= 2 ? allRooms.find(r => r.name.toLowerCase().includes(q)) : null;
+
+  const slotsSection = document.getElementById('room-slots-section');
+
+  if (match && match.slots) {
+    selectedSlot = null;
+    document.getElementById('start-time').value = '';
+    document.getElementById('end-time').value = '';
+
+    slotsSection.innerHTML = `
+      <div class="slots-label">שעות פנויות — ${match.name}</div>
+      <div class="slots-row">
+        ${match.slots.map(s => `
+          <button class="slot-btn" onclick="selectSlot('${s.start}','${s.end}',this)">
+            ${s.start}–${s.end}
+          </button>
+        `).join('')}
+      </div>
+    `;
+    slotsSection.style.display = 'block';
+    // Hide manual time inputs
+    document.getElementById('time-row-manual').style.display = 'none';
+  } else {
+    slotsSection.style.display = 'none';
+    slotsSection.innerHTML = '';
+    selectedSlot = null;
+    // Show manual time inputs
+    document.getElementById('time-row-manual').style.display = '';
+  }
+}
+
+function selectSlot(start, end, btn) {
+  selectedSlot = { start, end };
+  document.getElementById('start-time').value = start;
+  document.getElementById('end-time').value = end;
+  document.querySelectorAll('.slot-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
 }
 
 // ===== Room Search =====

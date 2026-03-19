@@ -113,7 +113,7 @@
         <input type="date" id="rehearsal-date" />
       </div>
 
-      <div class="time-row">
+      <div class="time-row" id="time-row-manual">
         <div class="field-group">
           <label class="field-label">משעה</label>
           <input type="time" id="start-time" step="1800" />
@@ -140,8 +140,10 @@
 
       <div class="field-group">
         <label class="field-label">שם חדר חזרות</label>
-        <input type="text" id="room-name-search" placeholder="לדוגמה: סטודיו TLV, כרמל ביט..." autocomplete="off" />
+        <input type="text" id="room-name-search" placeholder="לדוגמה: סטודיו TLV, כרמל ביט..." autocomplete="off" oninput="onRoomNameInput()" />
       </div>
+
+      <div id="room-slots-section" style="display:none"></div>
 
       <div class="nav-row">
         <button class="back-btn" onclick="goToStep(3)">חזרה</button>
