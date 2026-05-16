@@ -1,0 +1,734 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>יום הולדת שמח איתמר!</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html, body {
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      font-family: 'Heebo', 'Assistant', system-ui, -apple-system, sans-serif;
+      background: linear-gradient(135deg, #ff6ec4 0%, #7873f5 50%, #4ade80 100%);
+      background-size: 400% 400%;
+      animation: bgShift 12s ease infinite;
+      user-select: none;
+      -webkit-user-select: none;
+      touch-action: manipulation;
+    }
+
+    @keyframes bgShift {
+      0%, 100% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+    }
+
+    #gameArea {
+      position: fixed;
+      inset: 0;
+      overflow: hidden;
+    }
+
+    /* Top HUD */
+    .hud {
+      position: fixed;
+      top: 12px;
+      left: 12px;
+      right: 12px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      z-index: 50;
+      pointer-events: none;
+    }
+
+    .hud-box {
+      background: rgba(0, 0, 0, 0.35);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      color: #fff;
+      padding: 10px 18px;
+      border-radius: 999px;
+      font-size: 1.1rem;
+      font-weight: 700;
+      border: 2px solid rgba(255, 255, 255, 0.3);
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+    }
+
+    /* Main title */
+    .title-wrap {
+      position: fixed;
+      top: 70px;
+      left: 50%;
+      transform: translateX(-50%);
+      text-align: center;
+      z-index: 40;
+      pointer-events: none;
+      width: 92%;
+      max-width: 720px;
+    }
+
+    .title {
+      font-size: clamp(2rem, 7vw, 4.5rem);
+      font-weight: 900;
+      color: #fff;
+      text-shadow:
+        0 0 10px rgba(255, 105, 180, 0.8),
+        0 0 20px rgba(255, 215, 0, 0.6),
+        4px 4px 0 #ff1493,
+        8px 8px 0 #4b0082;
+      letter-spacing: -1px;
+      animation: bounce 2s ease-in-out infinite;
+    }
+
+    .subtitle {
+      font-size: clamp(1rem, 3vw, 1.4rem);
+      color: #fff;
+      margin-top: 8px;
+      font-weight: 600;
+      text-shadow: 2px 2px 0 #000;
+      opacity: 0.95;
+    }
+
+    @keyframes bounce {
+      0%, 100% { transform: translateY(0) rotate(-1deg); }
+      50% { transform: translateY(-10px) rotate(1deg); }
+    }
+
+    /* Balloons */
+    .balloon {
+      position: absolute;
+      width: 70px;
+      height: 90px;
+      cursor: pointer;
+      transition: transform 0.1s ease;
+      will-change: transform;
+    }
+
+    .balloon:active { transform: scale(0.9); }
+
+    .balloon::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 70px;
+      height: 85px;
+      background: var(--bcolor, #ff4d6d);
+      border-radius: 50% 50% 45% 45% / 55% 55% 45% 45%;
+      box-shadow:
+        inset -8px -10px 20px rgba(0, 0, 0, 0.2),
+        inset 8px 10px 20px rgba(255, 255, 255, 0.4);
+    }
+
+    .balloon::after {
+      content: '';
+      position: absolute;
+      bottom: -2px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 0;
+      height: 0;
+      border-left: 6px solid transparent;
+      border-right: 6px solid transparent;
+      border-top: 8px solid var(--bcolor, #ff4d6d);
+      filter: brightness(0.8);
+    }
+
+    .balloon .string {
+      position: absolute;
+      top: 88px;
+      left: 50%;
+      width: 2px;
+      height: 40px;
+      background: rgba(255, 255, 255, 0.6);
+      transform-origin: top center;
+      animation: sway 3s ease-in-out infinite;
+    }
+
+    @keyframes sway {
+      0%, 100% { transform: translateX(-50%) rotate(-3deg); }
+      50% { transform: translateX(-50%) rotate(3deg); }
+    }
+
+    /* Candies */
+    .candy {
+      position: absolute;
+      width: 50px;
+      height: 50px;
+      cursor: pointer;
+      animation: spin 4s linear infinite;
+      will-change: transform;
+    }
+
+    @keyframes spin {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+
+    .candy.lollipop {
+      background: radial-gradient(circle at 35% 35%, #fff, #ff4d9d 30%, #c2185b 100%);
+      border-radius: 50%;
+      border: 3px solid #fff;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+      position: relative;
+    }
+    .candy.lollipop::after {
+      content: '';
+      position: absolute;
+      top: 100%;
+      left: 50%;
+      width: 3px;
+      height: 20px;
+      background: #fff;
+      transform: translateX(-50%);
+    }
+
+    .candy.choco {
+      background: linear-gradient(135deg, #6b3410, #3d1f08);
+      border-radius: 8px;
+      border: 2px solid #4a2810;
+      box-shadow:
+        inset 4px 4px 0 rgba(255, 255, 255, 0.15),
+        0 4px 15px rgba(0, 0, 0, 0.4);
+    }
+
+    .candy.cupcake {
+      width: 55px;
+      height: 60px;
+      background:
+        radial-gradient(circle at 50% 28%, #ff4d9d 0 30%, transparent 31%),
+        radial-gradient(circle at 30% 35%, #fff066 0 14%, transparent 15%),
+        radial-gradient(circle at 70% 35%, #66ff99 0 14%, transparent 15%),
+        linear-gradient(180deg, #ffb3d9 50%, #d4853c 50%);
+      border-radius: 50% 50% 10% 10% / 60% 60% 10% 10%;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+    }
+
+    .candy.cake {
+      width: 60px;
+      height: 55px;
+      background:
+        linear-gradient(180deg, #fff 0 25%, transparent 25%),
+        linear-gradient(180deg, #ff66a3 0 50%, #ffd700 50%);
+      border-radius: 8px;
+      border: 2px solid #ff1493;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+      position: relative;
+    }
+    .candy.cake::before {
+      content: '🕯️';
+      position: absolute;
+      top: -22px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 22px;
+    }
+
+    /* Confetti */
+    .confetti {
+      position: absolute;
+      width: 10px;
+      height: 14px;
+      pointer-events: none;
+      will-change: transform, opacity;
+    }
+
+    /* Pop effect */
+    .pop {
+      position: absolute;
+      font-size: 2rem;
+      font-weight: 900;
+      color: #fff;
+      text-shadow: 2px 2px 0 #000, 0 0 10px #ffd700;
+      pointer-events: none;
+      animation: popUp 0.8s ease-out forwards;
+      z-index: 30;
+    }
+
+    @keyframes popUp {
+      0% { transform: scale(0.5) translateY(0); opacity: 1; }
+      100% { transform: scale(1.8) translateY(-60px); opacity: 0; }
+    }
+
+    /* Start screen */
+    .start-screen {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.6);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 100;
+      padding: 20px;
+    }
+
+    .start-card {
+      background: linear-gradient(135deg, #fff 0%, #fff5fa 100%);
+      border-radius: 24px;
+      padding: 2rem 2.5rem;
+      max-width: 480px;
+      width: 100%;
+      text-align: center;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+      border: 4px solid #ff66a3;
+      animation: cardIn 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    @keyframes cardIn {
+      from { transform: scale(0.5) rotate(-10deg); opacity: 0; }
+      to { transform: scale(1) rotate(0); opacity: 1; }
+    }
+
+    .start-card h1 {
+      font-size: clamp(1.8rem, 6vw, 2.6rem);
+      background: linear-gradient(90deg, #ff1493, #7b2cbf, #4ade80);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      margin-bottom: 0.5rem;
+      font-weight: 900;
+    }
+
+    .start-card .emoji-row {
+      font-size: 2.5rem;
+      margin: 0.8rem 0;
+      letter-spacing: 8px;
+    }
+
+    .start-card p {
+      color: #444;
+      font-size: 1.05rem;
+      line-height: 1.6;
+      margin-bottom: 1.2rem;
+    }
+
+    .start-card .rules {
+      background: #fff0f7;
+      border: 2px dashed #ff66a3;
+      border-radius: 14px;
+      padding: 12px;
+      margin-bottom: 1.2rem;
+      text-align: right;
+      font-size: 0.95rem;
+      color: #333;
+    }
+
+    .start-card .rules div { margin: 4px 0; }
+
+    .start-btn {
+      background: linear-gradient(135deg, #ff1493, #ff6347);
+      color: #fff;
+      border: none;
+      padding: 14px 40px;
+      font-size: 1.2rem;
+      font-weight: 800;
+      border-radius: 999px;
+      cursor: pointer;
+      box-shadow: 0 6px 20px rgba(255, 20, 147, 0.5);
+      transition: transform 0.15s ease, box-shadow 0.15s ease;
+      font-family: inherit;
+    }
+
+    .start-btn:hover {
+      transform: translateY(-2px) scale(1.03);
+      box-shadow: 0 8px 25px rgba(255, 20, 147, 0.7);
+    }
+
+    .start-btn:active { transform: scale(0.97); }
+
+    /* End screen */
+    .end-screen {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.7);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 100;
+      padding: 20px;
+    }
+
+    .end-screen.show { display: flex; }
+
+    .end-card {
+      background: linear-gradient(135deg, #fff 0%, #fffacd 100%);
+      border-radius: 24px;
+      padding: 2rem 2.5rem;
+      max-width: 520px;
+      width: 100%;
+      text-align: center;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+      border: 4px solid #ffd700;
+      animation: cardIn 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    .end-card h2 {
+      font-size: clamp(1.6rem, 5vw, 2.2rem);
+      color: #ff1493;
+      margin-bottom: 0.6rem;
+      font-weight: 900;
+    }
+
+    .end-card .score-big {
+      font-size: 3.5rem;
+      font-weight: 900;
+      color: #7b2cbf;
+      margin: 0.6rem 0;
+      text-shadow: 3px 3px 0 #ffd700;
+    }
+
+    .end-card .greeting {
+      color: #333;
+      font-size: 1.05rem;
+      line-height: 1.7;
+      margin: 1rem 0 1.4rem;
+      text-align: right;
+      background: #fff0f7;
+      padding: 14px;
+      border-radius: 14px;
+      border-right: 4px solid #ff66a3;
+    }
+
+    .end-card .greeting strong {
+      color: #ff1493;
+      font-size: 1.15rem;
+    }
+
+    /* Particles for celebration */
+    .celebration {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 200;
+    }
+
+    @media (max-width: 600px) {
+      .balloon { width: 55px; height: 72px; }
+      .balloon::before { width: 55px; height: 68px; }
+      .candy { width: 42px; height: 42px; }
+      .hud-box { font-size: 0.95rem; padding: 8px 14px; }
+      .title-wrap { top: 60px; }
+    }
+  </style>
+</head>
+<body>
+
+  <div id="gameArea"></div>
+
+  <div class="title-wrap">
+    <div class="title">🎉 יום הולדת שמח איתמר! 🎂</div>
+    <div class="subtitle">פוצץ בלונים ותפוס ממתקים — כמה שיותר!</div>
+  </div>
+
+  <div class="hud">
+    <div class="hud-box">🎯 ניקוד: <span id="score">0</span></div>
+    <div class="hud-box">⏱️ זמן: <span id="time">30</span></div>
+  </div>
+
+  <!-- Start Screen -->
+  <div class="start-screen" id="startScreen">
+    <div class="start-card">
+      <h1>יום הולדת שמח, איתמר!</h1>
+      <div class="emoji-row">🎈🎂🍭🎁🎉</div>
+      <p>הכנתי לך משחק מיוחד ליום ההולדת שלך — בוא נחגוג עם בלונים, ממתקים והרבה צבעים!</p>
+      <div class="rules">
+        <div>🎈 <b>בלונים</b> = 10 נקודות</div>
+        <div>🍭 <b>סוכריות על מקל</b> = 15 נקודות</div>
+        <div>🍫 <b>שוקולדים</b> = 20 נקודות</div>
+        <div>🧁 <b>קאפקייקים</b> = 25 נקודות</div>
+        <div>🎂 <b>עוגות יום הולדת</b> = 50 נקודות!</div>
+      </div>
+      <button class="start-btn" onclick="startGame()">בוא נתחיל! 🎈</button>
+    </div>
+  </div>
+
+  <!-- End Screen -->
+  <div class="end-screen" id="endScreen">
+    <div class="end-card">
+      <h2 id="endTitle">איזה אלוף! 🏆</h2>
+      <div class="score-big" id="finalScore">0</div>
+      <div class="greeting">
+        <strong>איתמר היקר,</strong><br>
+        מאחל לך יום הולדת מטורף ושמח! 🎂<br>
+        שתמיד תהיה מוקף באנשים שאוהבים אותך,<br>
+        שכל חלום שאתה חולם יתגשם,<br>
+        ושהשנה הבאה תהיה הכי טובה שהייתה לך — מלאה בצחוקים, הרפתקאות וטעמים מתוקים! 🍭✨
+      </div>
+      <button class="start-btn" onclick="restartGame()">שחק שוב 🎈</button>
+    </div>
+  </div>
+
+  <div class="celebration" id="celebration"></div>
+
+  <script>
+    const gameArea = document.getElementById('gameArea');
+    const scoreEl = document.getElementById('score');
+    const timeEl = document.getElementById('time');
+    const startScreen = document.getElementById('startScreen');
+    const endScreen = document.getElementById('endScreen');
+    const finalScoreEl = document.getElementById('finalScore');
+    const endTitleEl = document.getElementById('endTitle');
+    const celebration = document.getElementById('celebration');
+
+    let score = 0;
+    let timeLeft = 30;
+    let gameActive = false;
+    let spawnInterval = null;
+    let timerInterval = null;
+
+    const balloonColors = ['#ff4d6d', '#4ade80', '#facc15', '#60a5fa', '#c084fc', '#fb923c', '#f472b6'];
+    const candyTypes = [
+      { cls: 'lollipop', points: 15, emoji: '🍭' },
+      { cls: 'choco', points: 20, emoji: '🍫' },
+      { cls: 'cupcake', points: 25, emoji: '🧁' },
+      { cls: 'cake', points: 50, emoji: '🎂' }
+    ];
+
+    function rand(min, max) {
+      return Math.random() * (max - min) + min;
+    }
+
+    function spawnBalloon() {
+      const balloon = document.createElement('div');
+      balloon.className = 'balloon';
+      const color = balloonColors[Math.floor(Math.random() * balloonColors.length)];
+      balloon.style.setProperty('--bcolor', color);
+      balloon.innerHTML = '<div class="string"></div>';
+
+      const x = rand(5, window.innerWidth - 80);
+      balloon.style.left = x + 'px';
+      balloon.style.top = (window.innerHeight + 20) + 'px';
+
+      const duration = rand(5, 9);
+      balloon.style.transition = `top ${duration}s linear, transform 0.1s ease`;
+
+      gameArea.appendChild(balloon);
+
+      requestAnimationFrame(() => {
+        balloon.style.top = '-120px';
+      });
+
+      const popHandler = (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        popBalloon(balloon, x, balloon.getBoundingClientRect().top, color);
+      };
+      balloon.addEventListener('click', popHandler);
+      balloon.addEventListener('touchstart', popHandler, { passive: false });
+
+      setTimeout(() => balloon.remove(), duration * 1000 + 200);
+    }
+
+    function popBalloon(balloon, x, y, color) {
+      if (balloon.dataset.popped) return;
+      balloon.dataset.popped = '1';
+      score += 10;
+      updateScore();
+      showPop(x + 35, y + 40, '+10', color);
+      makeConfetti(x + 35, y + 40, color, 12);
+      balloon.style.transition = 'transform 0.2s ease, opacity 0.2s ease';
+      balloon.style.transform = 'scale(1.5)';
+      balloon.style.opacity = '0';
+      setTimeout(() => balloon.remove(), 200);
+    }
+
+    function spawnCandy() {
+      const type = candyTypes[Math.floor(Math.random() * candyTypes.length)];
+      const candy = document.createElement('div');
+      candy.className = 'candy ' + type.cls;
+
+      const x = rand(5, window.innerWidth - 60);
+      candy.style.left = x + 'px';
+      candy.style.top = '-60px';
+
+      const duration = rand(4, 7);
+      candy.style.transition = `top ${duration}s linear`;
+
+      gameArea.appendChild(candy);
+
+      requestAnimationFrame(() => {
+        candy.style.top = (window.innerHeight + 80) + 'px';
+      });
+
+      const grabHandler = (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        grabCandy(candy, type, x);
+      };
+      candy.addEventListener('click', grabHandler);
+      candy.addEventListener('touchstart', grabHandler, { passive: false });
+
+      setTimeout(() => candy.remove(), duration * 1000 + 200);
+    }
+
+    function grabCandy(candy, type, x) {
+      if (candy.dataset.grabbed) return;
+      candy.dataset.grabbed = '1';
+      score += type.points;
+      updateScore();
+      const rect = candy.getBoundingClientRect();
+      showPop(rect.left + 25, rect.top + 25, '+' + type.points, '#ffd700');
+      makeConfetti(rect.left + 25, rect.top + 25, '#ffd700', 8);
+      candy.style.transition = 'transform 0.3s ease, opacity 0.3s ease';
+      candy.style.transform = 'scale(2) rotate(720deg)';
+      candy.style.opacity = '0';
+      setTimeout(() => candy.remove(), 300);
+    }
+
+    function showPop(x, y, text, color) {
+      const pop = document.createElement('div');
+      pop.className = 'pop';
+      pop.textContent = text;
+      pop.style.left = x + 'px';
+      pop.style.top = y + 'px';
+      pop.style.color = color;
+      document.body.appendChild(pop);
+      setTimeout(() => pop.remove(), 800);
+    }
+
+    function makeConfetti(x, y, color, count) {
+      const colors = [color, '#ffd700', '#ff69b4', '#4ade80', '#60a5fa', '#fff'];
+      for (let i = 0; i < count; i++) {
+        const c = document.createElement('div');
+        c.className = 'confetti';
+        c.style.background = colors[Math.floor(Math.random() * colors.length)];
+        c.style.left = x + 'px';
+        c.style.top = y + 'px';
+        c.style.borderRadius = Math.random() > 0.5 ? '50%' : '2px';
+        document.body.appendChild(c);
+
+        const angle = Math.random() * Math.PI * 2;
+        const velocity = rand(80, 200);
+        const dx = Math.cos(angle) * velocity;
+        const dy = Math.sin(angle) * velocity - 80;
+        const rot = rand(-720, 720);
+
+        c.animate([
+          { transform: 'translate(0, 0) rotate(0deg)', opacity: 1 },
+          { transform: `translate(${dx}px, ${dy + 300}px) rotate(${rot}deg)`, opacity: 0 }
+        ], {
+          duration: 1200,
+          easing: 'cubic-bezier(0.25, 0.46, 0.45, 0.94)'
+        });
+
+        setTimeout(() => c.remove(), 1300);
+      }
+    }
+
+    function updateScore() {
+      scoreEl.textContent = score;
+      scoreEl.style.animation = 'none';
+      void scoreEl.offsetWidth;
+      scoreEl.style.animation = 'bounce 0.3s ease';
+    }
+
+    function startGame() {
+      score = 0;
+      timeLeft = 30;
+      gameActive = true;
+      updateScore();
+      timeEl.textContent = timeLeft;
+      startScreen.style.display = 'none';
+      endScreen.classList.remove('show');
+
+      spawnInterval = setInterval(() => {
+        if (!gameActive) return;
+        if (Math.random() < 0.65) {
+          spawnBalloon();
+        } else {
+          spawnCandy();
+        }
+      }, 600);
+
+      timerInterval = setInterval(() => {
+        timeLeft--;
+        timeEl.textContent = timeLeft;
+        if (timeLeft <= 5) {
+          timeEl.parentElement.style.color = '#ffeb3b';
+        }
+        if (timeLeft <= 0) {
+          endGame();
+        }
+      }, 1000);
+    }
+
+    function endGame() {
+      gameActive = false;
+      clearInterval(spawnInterval);
+      clearInterval(timerInterval);
+      timeEl.parentElement.style.color = '#fff';
+
+      // Clean up remaining items
+      setTimeout(() => {
+        document.querySelectorAll('.balloon, .candy').forEach(el => el.remove());
+      }, 100);
+
+      finalScoreEl.textContent = score;
+
+      let title = '';
+      if (score >= 500) title = '🏆 אגדה! מלך יום ההולדת!';
+      else if (score >= 300) title = '🌟 מדהים! אתה אלוף!';
+      else if (score >= 150) title = '🎉 כל הכבוד איתמר!';
+      else title = '🎂 איזה כיף!';
+      endTitleEl.textContent = title;
+
+      endScreen.classList.add('show');
+      bigCelebration();
+    }
+
+    function restartGame() {
+      endScreen.classList.remove('show');
+      startGame();
+    }
+
+    function bigCelebration() {
+      const colors = ['#ff1493', '#ffd700', '#4ade80', '#60a5fa', '#ff6347', '#c084fc', '#fff'];
+      for (let i = 0; i < 80; i++) {
+        setTimeout(() => {
+          const c = document.createElement('div');
+          c.className = 'confetti';
+          c.style.background = colors[Math.floor(Math.random() * colors.length)];
+          c.style.left = rand(0, window.innerWidth) + 'px';
+          c.style.top = '-20px';
+          c.style.width = rand(8, 14) + 'px';
+          c.style.height = rand(10, 18) + 'px';
+          c.style.borderRadius = Math.random() > 0.5 ? '50%' : '2px';
+          celebration.appendChild(c);
+
+          const drift = rand(-100, 100);
+          const rot = rand(-720, 720);
+
+          c.animate([
+            { transform: 'translate(0, 0) rotate(0deg)', opacity: 1 },
+            { transform: `translate(${drift}px, ${window.innerHeight + 50}px) rotate(${rot}deg)`, opacity: 0.8 }
+          ], {
+            duration: rand(2500, 4500),
+            easing: 'cubic-bezier(0.25, 0.46, 0.45, 0.94)'
+          });
+
+          setTimeout(() => c.remove(), 4500);
+        }, i * 40);
+      }
+    }
+
+    // Pre-spawn some balloons on the start screen for atmosphere
+    function ambientBalloons() {
+      if (!gameActive && !startScreen.style.display.includes('none')) {
+        if (Math.random() < 0.5) spawnBalloon();
+        setTimeout(ambientBalloons, 1500);
+      }
+    }
+    ambientBalloons();
+
+    // Initial celebration burst on load
+    setTimeout(bigCelebration, 300);
+  </script>
+</body>
+</html>
